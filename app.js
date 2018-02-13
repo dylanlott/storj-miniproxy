@@ -1,12 +1,13 @@
+require('dotenv').config();
 const express = require('express');
 const path = require('path');
 const favicon = require('serve-favicon');
 const logger = require('morgan');
 const exphbs = require('express-handlebars');
 const cookieParser = require('cookie-parser');
+const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const multer = require('multer');
-require('dotenv').config();
 
 // setup
 const index = require('./routes/index');
@@ -17,18 +18,23 @@ const download = require('./routes/download');
 const deleteFile = require('./routes/deleteFile');
 const createBucket = require('./routes/createBucket');
 const deleteBucket = require('./routes/deleteBucket');
+const shareFile = require('./routes/shareFile');
 
 const app = express();
 
 // setup storj environment
 const { Environment } = require('storj');
 const storj = new Environment({
-  bridgeUrl: process.env.BRIDGE_URL, 
+  bridgeUrl: process.env.BRIDGE_URL,
   bridgeUser: process.env.BRIDGE_EMAIL,
   bridgePass: process.env.BRIDGE_PASS,
   encryptionKey: process.env.ENCRYPT_KEY,
   logLevel: 4
-}); 
+});
+
+mongoose.connect(process.env.MONGO_URI)
+  .then(() => console.log('connected to mongoose'))
+  .catch((err) => console.error('error connecting to mongo', err));
 
 // view engine setup
 app.engine('.hbs', exphbs({defaultLayout: 'layout', extname: '.hbs'}));
@@ -52,10 +58,12 @@ app.use('/', index);
 app.get('/bucketList', bucketList);
 app.get('/bucketList/:bucketId', bucketPage);
 app.post('/bucketList/:bucketId', upload);
+app.post('/bucketList/:bucketId', upload);
 app.get('/bucketList/:bucketId/:fileId', download);
 app.get('/bucketList/:bucketId/:fileId/deleteFile', deleteFile);
 app.get('/bucketList/:bucketId/deleteBucket', deleteBucket);
 app.get('/createBucket', createBucket);
+app.get('/share', shareFile);
 app.use(express.static(path.join(__dirname, 'public')));
 
 module.exports = app;
