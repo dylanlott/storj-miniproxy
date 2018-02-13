@@ -63,7 +63,7 @@ app.get('/bucketList/:bucketId/:fileId', download);
 app.get('/bucketList/:bucketId/:fileId/deleteFile', deleteFile);
 app.get('/bucketList/:bucketId/deleteBucket', deleteBucket);
 app.get('/createBucket', createBucket);
-app.get('/share', shareFile);
+app.get('/share/:bucket_id/:file_id', shareFile);
 app.use(express.static(path.join(__dirname, 'public')));
 
 module.exports = app;
