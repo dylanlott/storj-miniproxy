@@ -23,36 +23,39 @@ Functionalities:
 After setting up a local bridge server (instructions below) using either storj-integration or storj-sdk, use `npm install` then `npm start`.
 Then you can check `http://localhost:7000` to see if the app's index page is there. The reason for not using `http://localhost:3000` is because Docker runs on that port, which you will need to run your Storj test server.
 
+## Create a dotenv file 
+In yoru project root, create a `.env` file by running `touch .env`
+Inside it, you'll need it to have the following values: 
+
+```
+BRIDGE_URL=http://localhost:6382
+BRIDGE_EMAIL=<your email>
+BRIDGE_PASS=<your_password>
+ENCRYPTION_KEY=<your encryption key>
+PORT=10000
+MONGO_URI=mongodb://localhost:27017/storj-sender
+```
+
+You'll need a running instance of MongoDB for this to work as well, so you'll need to update MONGO_URI to match that. 
+
+## Build the docker container 
+Once you've got this up and running, you can run 
+
+`docker build -t storj-sender .` and wait for it to build. 
+
+Once it's built, run 
+
+`docker run -p 10000:10000 --name storj-sender -d storj-sender`
+
+This should pull up the application. 
+
+Point your browser to localhost:10000 and you can see the app running. 
+
 ### Connecting to a Bridge Server with [Storj-SDK](https://github.com/Storj/storj-sdk)
 
 See [Storj-SDK](https://github.com/Storj/storj-sdk) README for setup.
-Inside your storj-sdk repo, you can check what containers are running with this command:
-```bash
-docker-compose ps
-```
-To run the bridge:
-```bash
-docker-compose up -d
-```
-To set the bridge address:
-```bash
-source ./scripts/setbr
-```
-To set host entries:
 
-(Note that as of 11/3/17, this script will do its job but automatically close your shell when it's finished.)
-```bash
-source ./scripts/set_host_entries.sh
-```
-You can confirm where your local bridge is set with:
-```bash
-source ./scripts/get_local_bridge.sh
-```
 
-You'll then be given the address to where the bridge is set. The `BRIDGE_URL` variable needs to be set to this address in your .env file.
-In your `~/.storj` directory (for OSX) there should be some IP.json files. Make sure that the credentials in that file match your local bridge's IP address as well. You may have to rename your .json file with the correct IP address.
-
-Now, when you use the command `storj export-keys`, the resulting email, password, and encryption key need to be saved to your `.env` file respectively as `BRIDGE_EMAIL`, `BRIDGE_PASS`, and `ENCRYPT_KEY`.
 
 ### Troubleshooting Bridge Access with Storj-SDK
 Once inside the storj-sdk directory...
