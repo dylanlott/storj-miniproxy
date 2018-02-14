@@ -17,23 +17,14 @@ module.exports = (req, res, next) => {
   const bucket = req.params.bucket_id;
   const file = req.params.file_id;
   const uuid = guid();
-
   const hostname = process.env.HOSTNAME || 'localhost:9000'
-
-  const file_url = url.format({
-    pathname: '/file',
-    query: {
-      token: uuid
-    }
-  });
-
-  const fullUrl = `${hostname}${file_url}`
+  const fullUrl = url.format(`${hostname}/download/${uuid}`);
 
   const entry = new Entry({
     bucket: bucket,
     file: file,
     uuid: uuid,
-    url: `${hostname}${file_url}`
+    url: fullUrl
   });
 
   entry.save()

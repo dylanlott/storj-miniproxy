@@ -19,6 +19,7 @@ module.exports = (req, res, next) => {
         return next(err);
       }
       console.log('file download complete!');
+      res.redirect(`/bucketList`);
     }
   });
 }

@@ -19,6 +19,7 @@ const deleteFile = require('./routes/deleteFile');
 const createBucket = require('./routes/createBucket');
 const deleteBucket = require('./routes/deleteBucket');
 const shareFile = require('./routes/shareFile');
+const downloadWithToken = require('./routes/downloadWithToken');
 
 const app = express();
 
@@ -64,6 +65,7 @@ app.get('/bucketList/:bucketId/:fileId/deleteFile', deleteFile);
 app.get('/bucketList/:bucketId/deleteBucket', deleteBucket);
 app.get('/createBucket', createBucket);
 app.get('/share/:bucket_id/:file_id', shareFile);
+app.get('/download/:token', downloadWithToken);
 app.use(express.static(path.join(__dirname, 'public')));
 
 module.exports = app;

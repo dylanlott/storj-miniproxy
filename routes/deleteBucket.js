@@ -8,10 +8,10 @@ module.exports = (req, res, next) => {
   // deletes bucket
   storj.deleteBucket(bucketId, (err) => {
     if (err) {
+      console.log('error deleting bucket: ', err);
      return next(err);
     }
   });
 
   res.redirect('back');
-
 }
